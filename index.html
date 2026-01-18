@@ -1,102 +1,78 @@
-{\rtf1\ansi\ansicpg932\cocoartf2709
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw9980\paperh14180\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\f0\fs24 \cf0 <!DOCTYPE html>\
-<html lang="ja">\
-<head>\
-  <meta charset="UTF-8" />\
-  <title>\uc0\u12420 \u12414 \u12375 \u12429 \u12420 Pay\u65288 \u12486 \u12473 \u12488 \u65289 </title>\
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\
-  <style>\
-    :root\{\
-      /* \uc0\u30011 \u20687 \u12501 \u12449 \u12452 \u12523 \u21517 \u65288 \u20170 \u22238 \u12398 \u22793 \u26356 \u28857 \u65289  */\
-      --card-sprite: "frontback.png";\
-      --radius: 18px;\
-    \}\
-\
-    body\{\
-      margin:0;\
-      height:100vh;\
-      display:flex;\
-      align-items:center;\
-      justify-content:center;\
-      background:#f2f2f2;\
-      -webkit-tap-highlight-color: transparent;\
-    \}\
-\
-    .wrap\{\
-      display:flex;\
-      flex-direction:column;\
-      align-items:center;\
-      gap:10px;\
-      padding:16px;\
-    \}\
-\
-    .hint\{\
-      font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;\
-      font-size:14px;\
-      color:#666;\
-    \}\
-\
-    .card-container\{\
-      perspective: 1000px;\
-    \}\
-\
-    .card\{\
-      width: 340px;\
-      max-width: 92vw;\
-      aspect-ratio: 1.586 / 1; /* \uc0\u12463 \u12524 \u12459 \u27604 \u29575 \u12395 \u36817 \u12356  */\
-      position: relative;\
-      transform-style: preserve-3d;\
-      transition: transform .6s;\
-      cursor: pointer;\
-    \}\
-\
-    .card.is-flipped\{\
-      transform: rotateY(180deg);\
-    \}\
-\
-    .face\{\
-      position:absolute;\
-      inset:0;\
-      backface-visibility:hidden;\
-      border-radius: var(--radius);\
-      overflow:hidden;\
-      box-shadow: 0 10px 25px rgba(0,0,0,.15);\
-      background-image: url(var(--card-sprite));\
-      background-repeat: no-repeat;\
-      background-size: 100% 200%; /* \uc0\u32294 \u12395 2\u26522 \u65288 \u34920 /\u35023 \u65289 \u24819 \u23450  */\
-      background-position: 0% 0%; /* \uc0\u34920 \u65288 \u19978 \u21322 \u20998 \u65289  */\
-    \}\
-\
-    .back\{\
-      transform: rotateY(180deg);\
-      background-position: 0% 100%; /* \uc0\u35023 \u65288 \u19979 \u21322 \u20998 \u65289  */\
-    \}\
-  </style>\
-</head>\
-\
-<body>\
-  <div class="wrap">\
-    <div class="card-container">\
-      <div class="card" id="card" role="button" aria-label="\uc0\u12459 \u12540 \u12489 \u12434 \u21453 \u36578 ">\
-        <div class="face front"></div>\
-        <div class="face back"></div>\
-      </div>\
-    </div>\
-    <div class="hint">\uc0\u12479 \u12483 \u12503 \u12391 \u34920 /\u35023 \u12434 \u20999 \u12426 \u26367 \u12360 </div>\
-  </div>\
-\
-  <script>\
-    const card = document.getElementById("card");\
-    card.addEventListener("click", () => \{\
-      card.classList.toggle("is-flipped");\
-    \});\
-  </script>\
-</body>\
-</html>\
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>やましろやPay（テスト）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --card-sprite: "frontback.png";
+      --radius: 18px;
+    }
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#f2f2f2;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      padding:16px;
+    }
+    .hint{
+      font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      font-size:14px;
+      color:#666;
+    }
+    .card-container{ perspective: 1000px; }
+    .card{
+      width: 340px;
+      max-width: 92vw;
+      aspect-ratio: 1.586 / 1;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .6s;
+      cursor: pointer;
+    }
+    .card.is-flipped{ transform: rotateY(180deg); }
+    .face{
+      position:absolute;
+      inset:0;
+      backface-visibility:hidden;
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+      background-image: url(var(--card-sprite));
+      background-repeat: no-repeat;
+      background-size: 100% 200%;
+      background-position: 0% 0%;
+    }
+    .back{
+      transform: rotateY(180deg);
+      background-position: 0% 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card-container">
+      <div class="card" id="card" role="button" aria-label="カードを反転">
+        <div class="face front"></div>
+        <div class="face back"></div>
+      </div>
+    </div>
+    <div class="hint">タップで表/裏を切り替え</div>
+  </div>
+  <script>
+    document.getElementById("card").addEventListener("click", (e) => {
+      e.currentTarget.classList.toggle("is-flipped");
+    });
+  </script>
+</body>
+</html>
