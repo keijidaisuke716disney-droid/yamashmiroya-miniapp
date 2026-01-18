@@ -5,10 +5,6 @@
   <title>やましろやPay（テスト）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root{
-      --card-sprite: "frontback.png";
-      --radius: 18px;
-    }
     body{
       margin:0;
       height:100vh;
@@ -18,6 +14,7 @@
       background:#f2f2f2;
       -webkit-tap-highlight-color: transparent;
     }
+
     .wrap{
       display:flex;
       flex-direction:column;
@@ -25,12 +22,15 @@
       gap:10px;
       padding:16px;
     }
+
     .hint{
       font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
       font-size:14px;
       color:#666;
     }
+
     .card-container{ perspective: 1000px; }
+
     .card{
       width: 340px;
       max-width: 92vw;
@@ -40,19 +40,25 @@
       transition: transform .6s;
       cursor: pointer;
     }
+
     .card.is-flipped{ transform: rotateY(180deg); }
+
     .face{
       position:absolute;
       inset:0;
       backface-visibility:hidden;
-      border-radius: var(--radius);
+      border-radius: 18px;
       overflow:hidden;
       box-shadow: 0 10px 25px rgba(0,0,0,.15);
-      background-image: url(var(--card-sprite));
+
+      /* ★ここを直書きに変更（Safari対策） */
+      background-image: url("./frontback.png");
       background-repeat: no-repeat;
-      background-size: 100% 200%;
+      background-size: 100% 200%; /* 縦に2枚（上=表、下=裏） */
       background-position: 0% 0%;
+      background-color: #fff; /* もし画像読めなくても白背景 */
     }
+
     .back{
       transform: rotateY(180deg);
       background-position: 0% 100%;
@@ -69,6 +75,7 @@
     </div>
     <div class="hint">タップで表/裏を切り替え</div>
   </div>
+
   <script>
     document.getElementById("card").addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("is-flipped");
