@@ -176,7 +176,7 @@
   <!-- Code128生成ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
-  <script>
+ <script>
   const KEY = "yamashiroyaPay_v2";
   const $ = (id) => document.getElementById(id);
 
@@ -213,28 +213,23 @@
   }
 
   function drawBarcode(num){
-  // いったん中身を空にする（←これが重要）
-  const svg = document.getElementById("barcode");
-  svg.innerHTML = "";
+    if (typeof JsBarcode === "undefined") {
+      alert("バーコード生成ライブラリが読み込めませんでした。通信環境を確認して再読み込みしてください。");
+      return;
+    }
 
-  JsBarcode(svg, num, {
-    format: "CODE128",
-    displayValue: false,
-    height: 50,
-    margin: 0,
-    width: 1.6
-  });
+    // ★残像対策：描画前にSVGを空にする
+    const svg = $("barcode");
+    svg.innerHTML = "";
 
-  document.getElementById("cardnoText").textContent = fmt16(num);
-}
-
-    JsBarcode("#barcode", num, {
+    JsBarcode(svg, num, {
       format:"CODE128",
       displayValue:false,
       height:50,
       margin:0,
       width:1.6
     });
+
     $("cardnoText").textContent = fmt16(num);
   }
 
