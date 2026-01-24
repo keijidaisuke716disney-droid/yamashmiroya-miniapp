@@ -38,9 +38,6 @@
       font-size:16px;
     }
 
-    .row{ display:flex; gap:10px; }
-    .row > *{ flex:1; }
-
     .actions{ display:flex; gap:10px; margin-top:10px; }
     button{
       flex:1;
@@ -107,23 +104,23 @@
       font-size:13px;
       user-select:none;
     }
+
+    .hint{ font-size:12px; color:#666; font-weight:700; }
+
   </style>
 </head>
 
 <body>
   <div class="app">
 
-    <!-- STEP1 -->
+    <!-- STEP1: 本人情報 -->
     <section class="box" id="step1">
       <h1>本人情報登録</h1>
-      <p class="desc">現物カード発行時と同じ情報を入力してください。</p>
+      <p class="desc">現物カード発行時と同じ情報を入力してください（社内テスト）。</p>
 
       <label>氏名<input id="name"></label>
-      <div class="row">
-        <label>電話番号<input id="phone" inputmode="tel"></label>
-        <label>生年月日<input id="dob" type="text" placeholder="1999/07/16" />
-
-      </div>
+      <label>電話番号<input id="phone" inputmode="tel"></label>
+      <label>生年月日<input id="dob" type="text" placeholder="1999/07/16"></label>
       <label>住所<input id="address"></label>
 
       <div class="error" id="err1"></div>
@@ -133,7 +130,7 @@
       </div>
     </section>
 
-    <!-- STEP2 -->
+    <!-- STEP2: カード番号 -->
     <section class="box" id="step2" style="display:none;">
       <h1>カードログイン</h1>
       <p class="desc">カード番号16桁（数字のみ）を入力してください。</p>
@@ -148,7 +145,7 @@
       </div>
     </section>
 
-    <!-- STEP3 -->
+    <!-- STEP3: カード表示 -->
     <section class="box" id="step3" style="display:none;">
       <h1>やましろやPay</h1>
       <p class="desc">タップで表/裏を切り替え</p>
@@ -166,6 +163,8 @@
           </div>
         </div>
 
+        <div class="hint">カードをタップで反転</div>
+
         <div class="actions" style="width:100%;max-width:340px;">
           <button class="ghost" id="reset">登録情報をリセット</button>
         </div>
@@ -177,132 +176,131 @@
   <!-- Code128生成ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
- <script>
-  const KEY = "yamashiroyaPay_v2";
-  const $ = (id) => document.getElementById(id);
+  <script>
+    const KEY = "yamashiroyaPay_clean_v1";
+    const $ = (id) => document.getElementById(id);
 
-  function show(stepId){
-    $("step1").style.display = "none";
-    $("step2").style.display = "none";
-    $("step3").style.display = "none";
-    $(stepId).style.display = "block";
-    window.scrollTo(0,0);
-  }
-
-  function digits(s){ return (s || "").replace(/\D/g,""); }
-  function fmt16(s){ return s.replace(/(\d{4})(?=\d)/g,"$1 ").trim(); }
-
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      return raw ? JSON.parse(raw) : null;
-    }catch{
-      return null;
-    }
-  }
-  function save(o){ localStorage.setItem(KEY, JSON.stringify(o)); }
-
-  function setErr(id, msg){
-    const el = $(id);
-    if(!msg){
-      el.style.display = "none";
-      el.textContent = "";
-      return;
-    }
-    el.textContent = msg;
-    el.style.display = "block";
-  }
-
-  function drawBarcode(num){
-    if (typeof JsBarcode === "undefined") {
-      alert("バーコード生成ライブラリが読み込めませんでした。通信環境を確認して再読み込みしてください。");
-      return;
+    function show(stepId){
+      $("step1").style.display = "none";
+      $("step2").style.display = "none";
+      $("step3").style.display = "none";
+      $(stepId).style.display = "block";
+      window.scrollTo(0,0);
     }
 
-    // ★残像対策：描画前にSVGを空にする
-    const svg = $("barcode");
-    svg.innerHTML = "";
+    function digits(s){ return (s || "").replace(/\\D/g,""); }
+    function fmt16(s){ return s.replace(/(\\d{4})(?=\\d)/g,"$1 ").trim(); }
 
-    JsBarcode(svg, num, {
-      format:"CODE128",
-      displayValue:false,
-      height:50,
-      margin:0,
-      width:1.6
+    function load(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        return raw ? JSON.parse(raw) : null;
+      }catch{
+        return null;
+      }
+    }
+    function save(o){ localStorage.setItem(KEY, JSON.stringify(o)); }
+
+    function setErr(id, msg){
+      const el = $(id);
+      if(!msg){
+        el.style.display = "none";
+        el.textContent = "";
+        return;
+      }
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+
+    function drawBarcode(num){
+      if (typeof JsBarcode === "undefined") {
+        alert("バーコード生成ライブラリが読み込めませんでした。通信環境を確認して再読み込みしてください。");
+        return;
+      }
+      const svg = $("barcode");
+      svg.innerHTML = ""; // ★必ずクリア（残像対策）
+
+      JsBarcode(svg, num, {
+        format:"CODE128",
+        displayValue:false,
+        height:50,
+        margin:0,
+        width:1.6
+      });
+
+      $("cardnoText").textContent = fmt16(num);
+    }
+
+    // ===== 起動時 =====
+    const data = load();
+    if (data && digits(data.cardno).length === 16){
+      drawBarcode(digits(data.cardno));
+      show("step3");
+    } else {
+      show("step1");
+    }
+
+    // ===== STEP1 -> STEP2 =====
+    $("toStep2").addEventListener("click", () => {
+      setErr("err1", "");
+
+      const name = $("name").value.trim();
+      const phone = digits($("phone").value);
+      const dob = $("dob").value.trim();
+      const address = $("address").value.trim();
+
+      if(!name || !phone || !dob || !address){
+        setErr("err1", "すべて入力してください。");
+        return;
+      }
+      if(phone.length < 10 || phone.length > 11){
+        setErr("err1", "電話番号は10〜11桁で入力してください。");
+        return;
+      }
+
+      const d = load() || {};
+      d.name = name;
+      d.phone = phone;
+      d.dob = dob;
+      d.address = address;
+      save(d);
+
+      show("step2");
     });
 
-    $("cardnoText").textContent = fmt16(num);
-  }
+    // ===== STEP2 戻る =====
+    $("backTo1").addEventListener("click", () => show("step1"));
 
-  // 起動時：保存済みならいきなりカード表示
-  const data = load();
-  if (data && digits(data.cardno).length === 16){
-    drawBarcode(digits(data.cardno));
-    show("step3");
-  } else {
-    show("step1");
-  }
+    // ===== STEP2 -> STEP3 =====
+    $("login").addEventListener("click", () => {
+      setErr("err2", "");
 
-  // STEP1 -> STEP2
-  $("toStep2").addEventListener("click", () => {
-    setErr("err1", "");
+      const c = digits($("cardno").value);
+      if(c.length !== 16){
+        setErr("err2", "カード番号は16桁（数字のみ）で入力してください。");
+        return;
+      }
 
-    const name = $("name").value.trim();
-    const phone = digits($("phone").value);
-    const dob = $("dob").value;
-    const address = $("address").value.trim();
+      const d = load() || {};
+      d.cardno = c;
+      save(d);
 
-    if(!name || !phone || !dob || !address){
-      setErr("err1", "すべて入力してください。");
-      return;
-    }
-    if(phone.length < 10 || phone.length > 11){
-      setErr("err1", "電話番号は10〜11桁で入力してください。");
-      return;
-    }
+      drawBarcode(c);
+      show("step3");
+    });
 
-    const d = load() || {};
-    d.name = name;
-    d.phone = phone;
-    d.dob = dob;
-    d.address = address;
-    save(d);
+    // ===== カード反転 =====
+    $("card").addEventListener("click", () => {
+      $("card").classList.toggle("is-flipped");
+    });
 
-    show("step2");
-  });
-
-  // STEP2 戻る
-  $("backTo1").addEventListener("click", () => show("step1"));
-
-  // STEP2 -> STEP3
-  $("login").addEventListener("click", () => {
-    setErr("err2", "");
-
-    const c = digits($("cardno").value);
-    if(c.length !== 16){
-      setErr("err2", "カード番号は16桁（数字のみ）で入力してください。");
-      return;
-    }
-
-    const d = load() || {};
-    d.cardno = c;
-    save(d);
-
-    drawBarcode(c);
-    show("step3");
-  });
-
-  // 反転
-  $("card").addEventListener("click", () => {
-    $("card").classList.toggle("is-flipped");
-  });
-
-  // リセット
-  $("reset").addEventListener("click", () => {
-    if(confirm("登録情報をリセットしますか？")){
-      localStorage.removeItem(KEY);
-      location.reload();
-    }
-  });
-</script>
-
+    // ===== リセット =====
+    $("reset").addEventListener("click", () => {
+      if(confirm("登録情報をリセットしますか？")){
+        localStorage.removeItem(KEY);
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>
