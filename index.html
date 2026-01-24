@@ -213,11 +213,21 @@
   }
 
   function drawBarcode(num){
-    // JsBarcodeがまだ読み込めてない時の保険
-    if (typeof JsBarcode === "undefined") {
-      alert("バーコード生成ライブラリが読み込めませんでした。通信環境を確認してください。");
-      return;
-    }
+  // いったん中身を空にする（←これが重要）
+  const svg = document.getElementById("barcode");
+  svg.innerHTML = "";
+
+  JsBarcode(svg, num, {
+    format: "CODE128",
+    displayValue: false,
+    height: 50,
+    margin: 0,
+    width: 1.6
+  });
+
+  document.getElementById("cardnoText").textContent = fmt16(num);
+}
+
     JsBarcode("#barcode", num, {
       format:"CODE128",
       displayValue:false,
