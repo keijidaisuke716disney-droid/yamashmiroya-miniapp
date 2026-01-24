@@ -6,193 +6,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    :root{
-      --radius: 18px;
-      --shadow: 0 10px 25px rgba(0,0,0,.15);
-      --bg: #f2f2f2;
-      --text: #111;
-      --muted: #666;
-      --danger: #c62828;
-      --btn: #111;
-      --btnText: #fff;
-      --cardSprite: "./frontback.png"; /* 表/裏が縦に並んだ1枚画像 */
-    }
-
-    *{ box-sizing: border-box; }
+    *{ box-sizing:border-box; }
     body{
       margin:0;
       min-height:100vh;
-      background: var(--bg);
-      color: var(--text);
+      background:#f2f2f2;
       font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-      -webkit-tap-highlight-color: transparent;
       display:flex;
-      align-items:center;
       justify-content:center;
+      align-items:center;
       padding:16px;
     }
 
-    .app{
-      width: 380px;
-      max-width: 96vw;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+    .app{ width:380px; max-width:96vw; display:flex; flex-direction:column; gap:12px; }
 
-    .card-box{
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.08);
-      padding: 14px;
-    }
-
-    .title{
-      font-size: 16px;
-      font-weight: 800;
-      margin: 0 0 6px;
-    }
-    .desc{
-      margin:0;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .form{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:10px;
-    }
-    label{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-    input{
-      width:100%;
-      padding:12px 12px;
-      border-radius: 12px;
-      border:1px solid #d6d6d6;
-      font-size: 16px;
+    .box{
       background:#fff;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 6px 18px rgba(0,0,0,.08);
     }
-    input::placeholder{ color:#aaa; }
 
-    .row{
-      display:flex;
-      gap:10px;
+    h1{ font-size:16px; margin:0 0 6px; }
+    .desc{ font-size:12px; color:#666; margin:0 0 10px; }
+
+    label{ font-size:12px; color:#666; font-weight:700; display:flex; flex-direction:column; gap:6px; }
+    input{
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #ccc;
+      font-size:16px;
     }
+
+    .row{ display:flex; gap:10px; }
     .row > *{ flex:1; }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      margin-top: 6px;
-    }
+    .actions{ display:flex; gap:10px; margin-top:10px; }
     button{
       flex:1;
-      padding: 12px 12px;
-      border-radius: 12px;
+      padding:12px;
+      border-radius:12px;
       border:0;
-      font-weight: 800;
-      font-size: 14px;
+      font-weight:800;
       cursor:pointer;
     }
-    .primary{
-      background: var(--btn);
-      color: var(--btnText);
-    }
-    .ghost{
-      background: #f3f3f3;
-      color:#111;
-    }
+    .primary{ background:#111; color:#fff; }
+    .ghost{ background:#eee; }
 
-    .error{
-      color: var(--danger);
-      font-size: 12px;
-      font-weight: 700;
-      margin-top: 4px;
-      display:none;
-    }
+    .error{ color:#c62828; font-size:12px; font-weight:700; display:none; }
 
-    .small{
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    /* ===== カード表示 ===== */
+    .wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
 
-    /* カード表示（反転） */
-    .wrap{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:10px;
-      padding: 6px 0 2px;
-    }
-    .hint{
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .card-container{ perspective: 1000px; }
+    .card-container{ perspective:1000px; }
     .card{
-      width: 340px;
-      max-width: 92vw;
-      aspect-ratio: 1.586 / 1;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform .6s;
-      cursor: pointer;
+      width:340px; max-width:92vw;
+      aspect-ratio:1.586/1;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:.6s;
+      cursor:pointer;
     }
-    .card.is-flipped{ transform: rotateY(180deg); }
+    .card.is-flipped{ transform:rotateY(180deg); }
 
     .face{
       position:absolute; inset:0;
       backface-visibility:hidden;
-      border-radius: var(--radius);
+      border-radius:18px;
       overflow:hidden;
-      box-shadow: var(--shadow);
+      box-shadow:0 10px 25px rgba(0,0,0,.15);
+      background-image:url("./frontback.png");
+      background-size:100% 200%;
       background-repeat:no-repeat;
-      background-image: url("./frontback.png"); /* Safari対策：直書き */
-      background-size: 100% 200%;
-      background-color: #fff;
+      background-color:#fff;
     }
-    .front{ background-position: 0% 0%; }
+    .front{ background-position:0% 0%; }
     .back{
-      transform: rotateY(180deg);
-      background-position: 0% 100%;
+      transform:rotateY(180deg);
+      background-position:0% 100%;
+      padding:12px;
+      display:flex;
+      justify-content:flex-end;
     }
 
-    /* 裏面にバーコード枠（後で実装する時用の置き場） */
-    .back-overlay{
-      position:absolute;
-      left:12px; right:12px; bottom:12px;
-      background: rgba(255,255,255,.92);
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.10);
+    .barcode-box{
+      width:100%;
+      background:rgba(255,255,255,.95);
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
       display:flex;
       flex-direction:column;
+      align-items:center;
       gap:6px;
     }
-    .cardno{
-      text-align:center;
-      font-weight: 900;
-      letter-spacing: .10em;
-      font-size: 13px;
-      user-select:none;
-    }
 
-    .divider{
-      height:1px;
-      background:#eee;
-      margin: 10px 0;
+    .cardno{
+      font-weight:900;
+      letter-spacing:.12em;
+      font-size:13px;
+      user-select:none;
     }
   </style>
 </head>
@@ -200,95 +113,59 @@
 <body>
   <div class="app">
 
-    <!-- STEP 1: 本人情報 -->
-    <section class="card-box" id="step1">
-      <h1 class="title">本人情報登録（社内テスト）</h1>
-      <p class="desc">現物カード発行時と同じ情報を入力してください（テスト用）。</p>
+    <!-- STEP1 -->
+    <section class="box" id="step1">
+      <h1>本人情報登録</h1>
+      <p class="desc">現物カード発行時と同じ情報を入力してください。</p>
 
-      <div class="form">
-        <label>
-          氏名
-          <input id="name" type="text" placeholder="山本 太郎" autocomplete="name" />
-        </label>
+      <label>氏名<input id="name"></label>
+      <div class="row">
+        <label>電話番号<input id="phone" inputmode="tel"></label>
+        <label>生年月日<input id="dob" type="date"></label>
+      </div>
+      <label>住所<input id="address"></label>
 
-        <div class="row">
-          <label>
-            電話番号
-            <input id="phone" type="tel" inputmode="tel" placeholder="09012345678" autocomplete="tel" />
-          </label>
-          <label>
-            生年月日
-            <input id="dob" type="date" />
-          </label>
-        </div>
+      <div class="error" id="err1"></div>
 
-        <label>
-          住所
-          <input id="address" type="text" placeholder="例）群馬県〇〇市〇〇 1-2-3" autocomplete="street-address" />
-        </label>
-
-        <div class="error" id="err1"></div>
-
-        <div class="actions">
-          <button class="primary" id="toStep2">次へ</button>
-        </div>
-
-        <p class="small">
-          ※このMVPでは入力内容は端末内に保存されます（localStorage）。本番ではAPI連携に置き換えます。
-        </p>
+      <div class="actions">
+        <button class="primary" id="toStep2">次へ</button>
       </div>
     </section>
 
-    <!-- STEP 2: カード番号 -->
-    <section class="card-box" id="step2" style="display:none;">
-      <h1 class="title">カードログイン</h1>
+    <!-- STEP2 -->
+    <section class="box" id="step2" style="display:none;">
+      <h1>カードログイン</h1>
       <p class="desc">カード番号16桁（数字のみ）を入力してください。</p>
 
-      <div class="form">
-        <label>
-          カード番号（16桁）
-          <input id="cardno" type="text" inputmode="numeric" maxlength="16" placeholder="0000000000000000" />
-        </label>
+      <label>カード番号<input id="cardno" inputmode="numeric" maxlength="16"></label>
 
-        <div class="error" id="err2"></div>
+      <div class="error" id="err2"></div>
 
-        <div class="actions">
-          <button class="ghost" id="backTo1">戻る</button>
-          <button class="primary" id="login">カード表示へ</button>
-        </div>
-
-        <p class="small">
-          ※このMVPは「入力→表示」まで。将来ここでサーバー照合・バーコード生成・不正検知を追加します。
-        </p>
+      <div class="actions">
+        <button class="ghost" id="backTo1">戻る</button>
+        <button class="primary" id="login">カード表示へ</button>
       </div>
     </section>
 
-    <!-- STEP 3: カード表示（既存の反転UI） -->
-    <section class="card-box" id="step3" style="display:none;">
-      <h1 class="title">やましろやPay（カード表示）</h1>
-      <p class="desc">タップで表/裏を切り替えます。</p>
-
-      <div class="divider"></div>
+    <!-- STEP3 -->
+    <section class="box" id="step3" style="display:none;">
+      <h1>やましろやPay</h1>
+      <p class="desc">タップで表/裏を切り替え</p>
 
       <div class="wrap">
         <div class="card-container">
-          <div class="card" id="card" role="button" aria-label="カードを反転">
+          <div class="card" id="card">
             <div class="face front"></div>
-
             <div class="face back">
-              <!-- 裏面：まずはカード番号だけ表示（MVP）
-                   次フェーズでここにCode128バーコード（SVG）を追加 -->
-              <div class="back-overlay">
-                <div class="hint">カード番号（テスト）</div>
-                <div class="cardno" id="cardnoText">0000 0000 0000 0000</div>
+              <div class="barcode-box">
+                <svg id="barcode"></svg>
+                <div class="cardno" id="cardnoText"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="hint">カードをタップで反転</div>
-
-        <div class="actions" style="width:100%; max-width:340px;">
+        <div class="actions" style="width:100%;max-width:340px;">
           <button class="ghost" id="reset">登録情報をリセット</button>
         </div>
       </div>
@@ -296,126 +173,12 @@
 
   </div>
 
+  <!-- Code128生成ライブラリ -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
   <script>
-    // ===== Storage Keys =====
-    const KEY = "yamashiroyaPay_v1";
+    const KEY = "yamashiroyaPay_v2";
+    const $ = (id)=>document.getElementById(id);
 
-    // ===== Helpers =====
-    const $ = (id) => document.getElementById(id);
-
-    function show(stepId){
-      $("step1").style.display = "none";
-      $("step2").style.display = "none";
-      $("step3").style.display = "none";
-      $(stepId).style.display = "block";
-      window.scrollTo(0,0);
-    }
-
-    function setError(el, msg){
-      const e = $(el);
-      if (!msg){
-        e.style.display = "none";
-        e.textContent = "";
-        return;
-      }
-      e.textContent = msg;
-      e.style.display = "block";
-    }
-
-    function digitsOnly(s){ return (s || "").replace(/\D/g, ""); }
-
-    function format16(s){
-      return s.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
-    }
-
-    function load(){
-      try{
-        const raw = localStorage.getItem(KEY);
-        return raw ? JSON.parse(raw) : null;
-      }catch{
-        return null;
-      }
-    }
-
-    function save(obj){
-      localStorage.setItem(KEY, JSON.stringify(obj));
-    }
-
-    function isComplete(data){
-      return data
-        && data.name
-        && data.phone
-        && data.address
-        && data.dob
-        && data.cardno
-        && digitsOnly(data.cardno).length === 16;
-    }
-
-    // ===== Startup =====
-    const existing = load();
-    if (isComplete(existing)){
-      $("cardnoText").textContent = format16(digitsOnly(existing.cardno));
-      show("step3");
-    } else {
-      show("step1");
-    }
-
-    // ===== Step1 -> Step2 =====
-    $("toStep2").addEventListener("click", () => {
-      setError("err1", "");
-
-      const name = $("name").value.trim();
-      const phone = digitsOnly($("phone").value);
-      const dob = $("dob").value; // yyyy-mm-dd
-      const address = $("address").value.trim();
-
-      if (!name) return setError("err1", "氏名を入力してください。");
-      if (phone.length < 10 || phone.length > 11) return setError("err1", "電話番号を正しく入力してください（10〜11桁）。");
-      if (!dob) return setError("err1", "生年月日を入力してください。");
-      if (!address) return setError("err1", "住所を入力してください。");
-
-      const data = load() || {};
-      data.name = name;
-      data.phone = phone;
-      data.dob = dob;
-      data.address = address;
-      save(data);
-
-      show("step2");
-    });
-
-    // ===== Step2 Back =====
-    $("backTo1").addEventListener("click", () => {
-      show("step1");
-    });
-
-    // ===== Step2 Login -> Step3 =====
-    $("login").addEventListener("click", () => {
-      setError("err2", "");
-
-      const cardno = digitsOnly($("cardno").value);
-      if (cardno.length !== 16) return setError("err2", "カード番号は16桁（数字のみ）で入力してください。");
-
-      const data = load() || {};
-      data.cardno = cardno;
-      save(data);
-
-      $("cardnoText").textContent = format16(cardno);
-      show("step3");
-    });
-
-    // ===== Card flip =====
-    $("card").addEventListener("click", (e) => {
-      e.currentTarget.classList.toggle("is-flipped");
-    });
-
-    // ===== Reset =====
-    $("reset").addEventListener("click", () => {
-      if (confirm("登録情報をリセットしますか？（この端末の保存情報が消えます）")){
-        localStorage.removeItem(KEY);
-        location.reload();
-      }
-    });
-  </script>
-</body>
-</html>
+    function show(id){
+      step1.style
