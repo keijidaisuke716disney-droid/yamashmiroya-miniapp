@@ -233,14 +233,17 @@
       $("cardnoText").textContent = fmt16(num);
     }
 
-    // ===== 起動時 =====
-    const data = load();
-    if (data && digits(data.cardno).length === 16){
-      drawBarcode(digits(data.cardno));
-      show("step3");
-    } else {
-      show("step1");
-    }
+  // ===== 起動時（自動ログイン＋ちょい演出）=====
+const data = load();
+if (data && digits(data.cardno).length === 16){
+  show("step3");                 // 先に画面だけ出す
+  setTimeout(() => {             // ちょい待ってから描画
+    drawBarcode(digits(data.cardno));
+  }, 200);
+} else {
+  show("step1");
+}
+
 
     // ===== STEP1 -> STEP2 =====
     $("toStep2").addEventListener("click", () => {
