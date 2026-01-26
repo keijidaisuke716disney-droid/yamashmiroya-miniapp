@@ -397,18 +397,39 @@
   z-index: 999;
 }
 
+/* ===== 星型スパーク ===== */
 .card .sparkles i{
   position:absolute;
   left: var(--x0);
   top:  var(--y0);
-  width:18px; height:18px;
-  border-radius:999px;
-  background: radial-gradient(circle at 30% 30%, #ffffff, #ffcc00 45%, #ff9900 70%, #ff6600 100%);
-  box-shadow:
-    0 0 20px rgba(255,200,0,1),
-    0 0 60px rgba(255,160,0,.9),
-    0 0 140px rgba(255,120,0,.8);
+  width:20px; 
+  height:20px;
+  background: transparent;
   opacity:1;
+}
+
+/* 星の縦線 */
+.card .sparkles i::before,
+.card .sparkles i::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(#fffbe6, #ffd700, #ff9900);
+  border-radius:4px;
+  box-shadow:
+    0 0 12px rgba(255,220,120,1),
+    0 0 30px rgba(255,180,60,.9),
+    0 0 80px rgba(255,140,0,.8);
+}
+
+/* 縦 */
+.card .sparkles i::before{
+  transform: scaleX(.25);
+}
+
+/* 横 */
+.card .sparkles i::after{
+  transform: rotate(90deg) scaleX(.25);
 }
 
 .card.sparkle .sparkles{
