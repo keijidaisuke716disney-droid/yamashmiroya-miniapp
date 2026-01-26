@@ -210,23 +210,28 @@
 
 .card.sparkle .sparkles{
   opacity:1;
-  animation: sparkleFade 650ms ease-out forwards;
+  animation: sparkleFade 1600ms ease-out forwards;
 }
 @keyframes sparkleFade{
   0%   { opacity:0; }
-  15%  { opacity:1; }
+  10%  { opacity:1; }
+  80%  { opacity:1; }
   100% { opacity:0; }
 }
 
+
 /* 粒（12個）を疑似的に作る */
-.card .sparkles i{
+..card .sparkles i{
   position:absolute;
-  width:8px; height:8px;
+  left: var(--x0);
+  top:  var(--y0);
+  width:12px; height:12px;
   border-radius:999px;
-  background: rgba(255,255,255,.1);
+  background: radial-gradient(circle at 30% 30%, #fff6cc, #ffd700 60%, #ffb700 100%);
   box-shadow:
-    0 0 14px rgba(255,255,255,.1),
-    0 0 30px rgba(255,255,255,.75);
+    0 0 12px rgba(255,215,0,1),
+    0 0 30px rgba(255,200,0,.9),
+    0 0 80px rgba(255,200,0,.5);
   transform: translate(-50%,-50%) scale(.7);
   opacity:.95;
   filter: blur(.1px);
@@ -234,7 +239,7 @@
 
 /* それぞれ飛ぶ方向と時間をズラす */
 .card.sparkle .sparkles i{
-  animation: burst 650ms cubic-bezier(.2,.8,.2,1) forwards;
+  animation: burst 1200ms cubic-bezier(.2,.8,.2,1) forwards;
 }
 
 @keyframes burst{
