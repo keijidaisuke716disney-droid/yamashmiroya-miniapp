@@ -185,7 +185,7 @@
   inset:-20%;
   pointer-events:none;
   background: radial-gradient(circle at 30% 30%,
-    rgba(255,255,255,.65) 0%,
+    rgba(255,255,255,.95) 0%,
     rgba(255,255,255,0) 55%);
   opacity:0;
   transform: scale(.9);
@@ -221,12 +221,12 @@
 /* 粒（12個）を疑似的に作る */
 .card .sparkles i{
   position:absolute;
-  width:6px; height:6px;
+  width:8px; height:8px;
   border-radius:999px;
-  background: rgba(255,255,255,.95);
+  background: rgba(255,255,255,.1);
   box-shadow:
-    0 0 10px rgba(255,255,255,.9),
-    0 0 18px rgba(255,255,255,.6);
+    0 0 14px rgba(255,255,255,.1),
+    0 0 30px rgba(255,255,255,.75);
   transform: translate(-50%,-50%) scale(.7);
   opacity:.95;
   filter: blur(.1px);
@@ -256,7 +256,7 @@
 
 @keyframes barcodeGlow{
   0%   { box-shadow: 0 0 0 rgba(255,255,255,0); transform: scale(1); }
-  30%  { box-shadow: 0 0 22px rgba(255,255,255,.95), 0 0 45px rgba(255,255,255,.55); transform: scale(1.01); }
+  30%  { box-shadow: 0 0 28px rgba(255,255,255,.1), 0 0 45px rgba(255,255,255,.55); transform: scale(1.02); }
   100% { box-shadow: 0 0 0 rgba(255,255,255,0); transform: scale(1); }
 }
 
@@ -280,7 +280,7 @@
 
 .barcode-box.glow::after{
   opacity:1;
-  animation: scanSweep 520ms cubic-bezier(.2,.8,.2,1) forwards;
+  animation: scanSweep 520ms cubic-bezier(.2,.8,.2,1) 2;
 }
 
 @keyframes scanSweep{
@@ -355,6 +355,19 @@
   <i style="--x0:80%; --y0:40%; --x1:98%; --y1:35%;"></i>
   <i style="--x0:50%; --y0:25%; --x1:55%; --y1:0%;"></i>
   <i style="--x0:50%; --y0:80%; --x1:55%; --y1:110%;"></i>
+  <i style="--x0:12%; --y0:20%; --x1:-5%;  --y1:0%;"></i>
+<i style="--x0:18%; --y0:75%; --x1:-5%;  --y1:110%;"></i>
+<i style="--x0:35%; --y0:20%; --x1:25%;  --y1:-10%;"></i>
+<i style="--x0:35%; --y0:85%; --x1:25%;  --y1:120%;"></i>
+<i style="--x0:50%; --y0:10%; --x1:50%;  --y1:-20%;"></i>
+<i style="--x0:50%; --y0:90%; --x1:50%;  --y1:130%;"></i>
+<i style="--x0:65%; --y0:18%; --x1:80%;  --y1:-10%;"></i>
+<i style="--x0:65%; --y0:88%; --x1:80%;  --y1:120%;"></i>
+<i style="--x0:82%; --y0:25%; --x1:110%; --y1:10%;"></i>
+<i style="--x0:85%; --y0:75%; --x1:115%; --y1:95%;"></i>
+<i style="--x0:22%; --y0:45%; --x1:-10%; --y1:45%;"></i>
+<i style="--x0:78%; --y0:55%; --x1:115%; --y1:55%;"></i>
+
 </div>
 
             <div class="face front"></div>
