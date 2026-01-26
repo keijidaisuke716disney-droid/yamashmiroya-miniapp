@@ -392,8 +392,8 @@
       window.scrollTo(0,0);
     }
 
-    function digits(s){ return (s || "").replace(/\\D/g,""); }
-    function fmt16(s){ return s.replace(/(\\d{4})(?=\\d)/g,"$1 ").trim(); }
+    function digits(s){ return (s || "").replace(/\D/g,""); }
+function fmt16(s){ return s.replace(/(\d{4})(?=\d)/g,"$1 ").trim(); }
 
     function load(){
       try{
@@ -417,29 +417,33 @@
     }
 
     function drawBarcode(num){
-      if (typeof JsBarcode === "undefined") {
-        alert("バーコード生成ライブラリが読み込めませんでした。通信環境を確認して再読み込みしてください。");
-        return;
-      }
-      const svg = $("barcode");
-      svg.innerHTML = ""; // ★必ずクリア（残像対策）
+  if (typeof JsBarcode === "undefined") {
+    alert("バーコード生成ライブラリが読み込めませんでした。通信環境を確認して再読み込みしてください。");
+    return;
+  }
 
-      JsBarcode(svg, num, {
-        format:"CODE128",
-        displayValue:false,
-        height:50,
-        margin:0,
-        width:1.6
-      });
+  const svg = $("barcode");
+  svg.innerHTML = ""; // 残像対策
 
-      $("cardnoText").textContent = fmt16(num);
-    }
-// バーコード枠を光らせる（描画直後）
-const box = document.querySelector(".barcode-box");
-box.classList.remove("glow");     // 連続発火対策
-void box.offsetWidth;             // reflowでアニメ再発火
-box.classList.add("glow");
-setTimeout(() => box.classList.remove("glow"), 600);
+  JsBarcode(svg, num, {
+    format:"CODE128",
+    displayValue:false,
+    height:50,
+    margin:0,
+    width:1.6
+  });
+
+  $("cardnoText").textContent = fmt16(num);
+
+  // ★バーコード枠を光らせる（描画直後）
+  const box = document.querySelector(".barcode-box");
+  if (box){
+    box.classList.remove("glow");
+    void box.offsetWidth; // reflow
+    box.classList.add("glow");
+    setTimeout(() => box.classList.remove("glow"), 600);
+  }
+}
 
   // ===== 起動時（自動ログイン＋ちょい演出）=====
 const data = load();
@@ -503,21 +507,11 @@ if (data && digits(data.cardno).length === 16){
     });
 
     // ===== カード反転 =====
- $("card").addEventListener("click", () => {
+$("card").addEventListener("click", () => {
   const card = $("card");
 
-  // 連打でクラスが残らないように一旦外す
-  card.classList.remove("flash", "sparkle");
-
-  // 反転 + 派手演出
-  card.classList.add("flash", "sparkle");
-  card.classList.toggle("is-flipped");
-
-  // 後片付け
-  setTimeout(() => card.classList.remove("flash"), 420);
-  setTimeout(() => card.classList.remove("sparkle"), 700);
-});
-
+  // 連打対策（派手演出）
+  card.classList.remove("flash", "sparkle", "sweep", "is-flipping", "is-press");
 
   // 押した感
   card.classList.add("is-press");
@@ -525,13 +519,18 @@ if (data && digits(data.cardno).length === 16){
   // 光スイープ＆影
   card.classList.add("sweep", "is-flipping");
 
+  // キラキラ＋フラッシュ
+  card.classList.add("flash", "sparkle");
+
   // 反転
   card.classList.toggle("is-flipped");
 
-  // 後片付け（アニメの終わりでクラスを外す）
+  // 後片付け
   setTimeout(() => card.classList.remove("is-press"), 120);
-  setTimeout(() => card.classList.remove("sweep"), 700);
   setTimeout(() => card.classList.remove("is-flipping"), 350);
+  setTimeout(() => card.classList.remove("flash"), 420);
+  setTimeout(() => card.classList.remove("sparkle"), 700);
+  setTimeout(() => card.classList.remove("sweep"), 700);
 });
 
 
