@@ -350,6 +350,38 @@
   12%  { opacity:1; }
   100% { transform: translate(var(--x1), var(--y1)) scale(0); opacity:0; }
 }
+/* ===== sparkles 可視化パッチ（必須） ===== */
+.card .sparkles{
+  position:absolute;
+  inset:-10%;
+  pointer-events:none;
+  opacity:0;
+  transform: translateZ(2px);
+  z-index: 5;
+}
+
+.card .sparkles i{
+  position:absolute;
+  left: var(--x0);
+  top:  var(--y0);
+  width:10px; height:10px;
+  border-radius:999px;
+  background: rgba(255,255,255,1);
+  box-shadow:
+    0 0 12px rgba(255,255,255,1),
+    0 0 30px rgba(255,255,255,.85),
+    0 0 70px rgba(255,255,255,.35);
+}
+
+.card.sparkle .sparkles{
+  opacity:1;
+  animation: sparkleFade 900ms ease-out forwards;
+}
+
+.card.sparkle .sparkles i{
+  animation: burst 650ms cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay: var(--d, 0ms);
+}
 
   </style>
 </head>
