@@ -705,7 +705,12 @@ $("card").addEventListener("click", () => {
   card.classList.add("flash", "sparkle");
 
   // 反転
-  card.classList.toggle("is-flipped");
+  const sound = document.getElementById("flipSound");
+sound.currentTime = 0;
+sound.play();
+
+card.classList.toggle("is-flipped");
+
 
   // 後片付け
   setTimeout(() => card.classList.remove("is-press"), 120);
@@ -724,5 +729,7 @@ $("card").addEventListener("click", () => {
       }
     });
   </script>
+  <audio id="flipSound" src="se.mp3" preload="auto"></audio>
+
 </body>
 </html>
