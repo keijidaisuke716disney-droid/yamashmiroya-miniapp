@@ -295,6 +295,61 @@
   .barcode-box.glow{ animation:none; }
 }
 
+/* ===== Disney寄り：パーティクル強化 ===== */
+
+/* 粒を大きめ＋光量UP */
+.card .sparkles i{
+  width:8px; height:8px;
+  background: rgba(255,255,255,1);
+  box-shadow:
+    0 0 14px rgba(255,255,255,1),
+    0 0 32px rgba(255,255,255,.75);
+}
+
+/* キラ粒（星形っぽいスパーク）を追加：.sparkles i.star */
+.card .sparkles i.star{
+  width:10px; height:10px;
+  background: transparent;
+  box-shadow: none;
+  position:absolute;
+}
+.card .sparkles i.star::before,
+.card .sparkles i.star::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(255,255,255,1);
+  border-radius:999px;
+  filter: blur(.2px);
+  box-shadow:
+    0 0 10px rgba(255,255,255,1),
+    0 0 24px rgba(255,255,255,.6);
+}
+.card .sparkles i.star::before{ transform: rotate(0deg) scaleX(.25); }
+.card .sparkles i.star::after { transform: rotate(90deg) scaleX(.25); }
+
+/* 粒の飛び方を“ばらけさせる”ため、個別に遅延を許可 */
+.card.sparkle .sparkles i{
+  animation-delay: var(--d, 0ms);
+}
+
+/* 粒を2段階で破裂させる（派手さUP） */
+.card.sparkle .sparkles{
+  animation: sparkleFade 900ms ease-out forwards;
+}
+@keyframes sparkleFade{
+  0%   { opacity:0; }
+  12%  { opacity:1; }
+  70%  { opacity:1; }
+  100% { opacity:0; }
+}
+
+/* バーストの終点を少し遠く（散りが派手） */
+@keyframes burst{
+  0%   { transform: translate(var(--x0), var(--y0)) scale(.7); opacity:0; }
+  12%  { opacity:1; }
+  100% { transform: translate(var(--x1), var(--y1)) scale(0); opacity:0; }
+}
 
   </style>
 </head>
@@ -343,31 +398,42 @@
         <div class="card-container">
           <div class="card" id="card">
             <div class="sparkles" aria-hidden="true">
-  <i style="--x0:20%; --y0:30%; --x1:5%;  --y1:10%;"></i>
-  <i style="--x0:30%; --y0:65%; --x1:15%; --y1:90%;"></i>
-  <i style="--x0:45%; --y0:40%; --x1:45%; --y1:5%;"></i>
-  <i style="--x0:55%; --y0:70%; --x1:70%; --y1:95%;"></i>
-  <i style="--x0:65%; --y0:35%; --x1:90%; --y1:15%;"></i>
-  <i style="--x0:75%; --y0:55%; --x1:95%; --y1:60%;"></i>
-  <i style="--x0:40%; --y0:55%; --x1:20%; --y1:35%;"></i>
-  <i style="--x0:60%; --y0:45%; --x1:80%; --y1:30%;"></i>
-  <i style="--x0:25%; --y0:45%; --x1:10%; --y1:55%;"></i>
-  <i style="--x0:80%; --y0:40%; --x1:98%; --y1:35%;"></i>
-  <i style="--x0:50%; --y0:25%; --x1:55%; --y1:0%;"></i>
-  <i style="--x0:50%; --y0:80%; --x1:55%; --y1:110%;"></i>
-  <i style="--x0:12%; --y0:20%; --x1:-5%;  --y1:0%;"></i>
-<i style="--x0:18%; --y0:75%; --x1:-5%;  --y1:110%;"></i>
-<i style="--x0:35%; --y0:20%; --x1:25%;  --y1:-10%;"></i>
-<i style="--x0:35%; --y0:85%; --x1:25%;  --y1:120%;"></i>
-<i style="--x0:50%; --y0:10%; --x1:50%;  --y1:-20%;"></i>
-<i style="--x0:50%; --y0:90%; --x1:50%;  --y1:130%;"></i>
-<i style="--x0:65%; --y0:18%; --x1:80%;  --y1:-10%;"></i>
-<i style="--x0:65%; --y0:88%; --x1:80%;  --y1:120%;"></i>
-<i style="--x0:82%; --y0:25%; --x1:110%; --y1:10%;"></i>
-<i style="--x0:85%; --y0:75%; --x1:115%; --y1:95%;"></i>
-<i style="--x0:22%; --y0:45%; --x1:-10%; --y1:45%;"></i>
-<i style="--x0:78%; --y0:55%; --x1:115%; --y1:55%;"></i>
+  <!-- 丸粒 24 -->
+  <i style="--x0:20%; --y0:30%; --x1:2%;   --y1:5%;   --d:0ms;"></i>
+  <i style="--x0:30%; --y0:65%; --x1:10%;  --y1:105%; --d:40ms;"></i>
+  <i style="--x0:45%; --y0:40%; --x1:45%;  --y1:-10%; --d:80ms;"></i>
+  <i style="--x0:55%; --y0:70%; --x1:75%;  --y1:115%; --d:20ms;"></i>
+  <i style="--x0:65%; --y0:35%; --x1:105%; --y1:10%;  --d:60ms;"></i>
+  <i style="--x0:75%; --y0:55%; --x1:115%; --y1:55%;  --d:110ms;"></i>
+  <i style="--x0:40%; --y0:55%; --x1:15%;  --y1:35%;  --d:90ms;"></i>
+  <i style="--x0:60%; --y0:45%; --x1:90%;  --y1:25%;  --d:130ms;"></i>
+  <i style="--x0:25%; --y0:45%; --x1:-10%; --y1:45%;  --d:70ms;"></i>
+  <i style="--x0:80%; --y0:40%; --x1:120%; --y1:30%;  --d:140ms;"></i>
+  <i style="--x0:50%; --y0:25%; --x1:55%;  --y1:-25%; --d:30ms;"></i>
+  <i style="--x0:50%; --y0:80%; --x1:55%;  --y1:130%; --d:100ms;"></i>
 
+  <i style="--x0:12%; --y0:20%; --x1:-20%; --y1:-10%; --d:150ms;"></i>
+  <i style="--x0:18%; --y0:75%; --x1:-25%; --y1:125%; --d:180ms;"></i>
+  <i style="--x0:35%; --y0:20%; --x1:20%;  --y1:-30%; --d:160ms;"></i>
+  <i style="--x0:35%; --y0:85%; --x1:20%;  --y1:140%; --d:200ms;"></i>
+  <i style="--x0:50%; --y0:10%; --x1:50%;  --y1:-40%; --d:170ms;"></i>
+  <i style="--x0:50%; --y0:90%; --x1:50%;  --y1:150%; --d:220ms;"></i>
+  <i style="--x0:65%; --y0:18%; --x1:95%;  --y1:-25%; --d:190ms;"></i>
+  <i style="--x0:65%; --y0:88%; --x1:95%;  --y1:145%; --d:240ms;"></i>
+  <i style="--x0:82%; --y0:25%; --x1:140%; --y1:0%;   --d:210ms;"></i>
+  <i style="--x0:85%; --y0:75%; --x1:145%; --y1:105%; --d:260ms;"></i>
+  <i style="--x0:22%; --y0:45%; --x1:-35%; --y1:45%;  --d:230ms;"></i>
+  <i style="--x0:78%; --y0:55%; --x1:155%; --y1:55%;  --d:280ms;"></i>
+
+  <!-- 星粒 8（キラッと光る十字） -->
+  <i class="star" style="--x0:28%; --y0:35%; --x1:5%;   --y1:0%;   --d:60ms;"></i>
+  <i class="star" style="--x0:38%; --y0:70%; --x1:18%;  --y1:120%; --d:120ms;"></i>
+  <i class="star" style="--x0:52%; --y0:28%; --x1:55%;  --y1:-35%; --d:90ms;"></i>
+  <i class="star" style="--x0:58%; --y0:78%; --x1:65%;  --y1:140%; --d:160ms;"></i>
+  <i class="star" style="--x0:72%; --y0:33%; --x1:130%; --y1:10%;  --d:140ms;"></i>
+  <i class="star" style="--x0:78%; --y0:60%; --x1:155%; --y1:65%;  --d:200ms;"></i>
+  <i class="star" style="--x0:34%; --y0:52%; --x1:5%;   --y1:40%;  --d:180ms;"></i>
+  <i class="star" style="--x0:66%; --y0:48%; --x1:120%; --y1:35%;  --d:220ms;"></i>
 </div>
 
             <div class="face front"></div>
