@@ -108,6 +108,75 @@
     }
 
     .hint{ font-size:12px; color:#666; font-weight:700; }
+    /* === Flip effect pack === */
+
+/* カードの動きを少しリッチに */
+.card{
+  transition: transform .6s cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+}
+
+/* 反転開始の「押した感」 */
+.card.is-press{
+  transform: translateZ(0) scale(0.985);
+}
+
+/* 影の変化（立体感） */
+.face{
+  transition: box-shadow .35s ease;
+}
+
+/* 反転中に影を少し強く */
+.card.is-flipping .face{
+  box-shadow: 0 16px 40px rgba(0,0,0,.20);
+}
+
+/* 光のスイープ（カード全体に走る） */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  pointer-events:none;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.45) 45%,
+    rgba(255,255,255,0) 70%
+  );
+  transform: translateX(-120%) rotate(0deg);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+/* スイープを走らせる */
+.card.sweep::after{
+  opacity: 1;
+  animation: sweep 650ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+@keyframes sweep{
+  0%   { transform: translateX(-120%) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateX(120%) rotate(0deg); opacity: 0; }
+}
+
+/* バーコード枠も少し反応させる */
+.card.sweep .barcode-box{
+  animation: pop 220ms ease-out;
+}
+
+@keyframes pop{
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+/* 低減設定に配慮（iOSの“視差効果を減らす”等） */
+@media (prefers-reduced-motion: reduce){
+  .card, .face{ transition: none; }
+  .card::after{ display:none; }
+  .card.sweep .barcode-box{ animation:none; }
+}
+
 
   </style>
 </head>
@@ -296,8 +365,23 @@ if (data && digits(data.cardno).length === 16){
 
     // ===== カード反転 =====
     $("card").addEventListener("click", () => {
-      $("card").classList.toggle("is-flipped");
-    });
+  const card = $("card");
+
+  // 押した感
+  card.classList.add("is-press");
+
+  // 光スイープ＆影
+  card.classList.add("sweep", "is-flipping");
+
+  // 反転
+  card.classList.toggle("is-flipped");
+
+  // 後片付け（アニメの終わりでクラスを外す）
+  setTimeout(() => card.classList.remove("is-press"), 120);
+  setTimeout(() => card.classList.remove("sweep"), 700);
+  setTimeout(() => card.classList.remove("is-flipping"), 350);
+});
+
 
     // ===== リセット =====
     $("reset").addEventListener("click", () => {
