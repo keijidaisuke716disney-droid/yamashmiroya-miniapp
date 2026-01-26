@@ -688,36 +688,29 @@ if (data && digits(data.cardno).length === 16){
       show("step3");
     });
 
-    // ===== カード反転 =====
-$("card").addEventListener("click", () => {
-  const card = $("card");
+document.getElementById("card").addEventListener("click", () => {
+  const card = document.getElementById("card");
 
-  // 連打対策（派手演出）
-  card.classList.remove("flash", "sparkle", "sweep", "is-flipping", "is-press");
-
-  // 押した感
-  card.classList.add("is-press");
-
-  // 光スイープ＆影
-  card.classList.add("sweep", "is-flipping");
-
-  // キラキラ＋フラッシュ
-  card.classList.add("flash", "sparkle");
+  // 効果音
+  const sound = document.getElementById("flipSound");
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+  }
 
   // 反転
-  const sound = document.getElementById("flipSound");
-sound.currentTime = 0;
-sound.play();
+  card.classList.toggle("is-flipped");
 
-card.classList.toggle("is-flipped");
+  // 派手エフェクト再発火
+  card.classList.remove("flash", "sparkle", "sweep", "is-flipping", "is-press");
+  void card.offsetWidth;
 
+  card.classList.add("flash", "sparkle", "sweep", "is-flipping", "is-press");
 
-  // 後片付け
   setTimeout(() => card.classList.remove("is-press"), 120);
   setTimeout(() => card.classList.remove("is-flipping"), 350);
   setTimeout(() => card.classList.remove("flash"), 420);
-  setTimeout(() => card.classList.remove("sparkle"), 700);
-  setTimeout(() => card.classList.remove("sweep"), 700);
+  setTimeout(() => card.classList.remove("sparkle", "sweep"), 800);
 });
 
 
